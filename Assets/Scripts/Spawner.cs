@@ -6,14 +6,11 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public GameObject currentCube;
-
     [NonSerialized]
     public GameObject lastCube;
     [NonSerialized]
     public string side;
     private List<string> sides = new List<string>();
-    private System.Random random = new System.Random();
-    float colorRandom;
 
     private static Spawner instance;
     public static Spawner Instance { get { return instance; } }
@@ -33,20 +30,13 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         MainManager.Instance.NewPlatformEvent += NewCube;
-        colorRandom = UnityEngine.Random.Range(0f, 255f);
 
         sides.Add("x");
         sides.Add("-x");
         sides.Add("z");
         sides.Add("-z");
 
-        SetColor();
-    }
-
-    public void SetCameraPosition(GameObject current)
-    {
-        Camera.main.transform.position = new Vector3(0f, currentCube.transform.position.y, 0f) + new Vector3(200f, 150f, 200f);
-        Camera.main.transform.LookAt(current.transform.position);
+        ColorRandomazer.SetColor();
     }
 
     private void NewCube()
@@ -62,7 +52,7 @@ public class Spawner : MonoBehaviour
             if (currentCube.transform.localScale.x <= 0f || currentCube.transform.localScale.z <= 0f)
             {
                 MainManager.Instance.GameOver(currentCube);
-                SetCameraPosition(MainManager.Instance.stack);
+                CameraManager.Instance.SetCameraPosition(MainManager.Instance.stack);
                 Destroy(currentCube);
                 return;
             }
@@ -70,17 +60,10 @@ public class Spawner : MonoBehaviour
 
         lastCube = currentCube;
         currentCube = Instantiate(currentCube);
-        side = sides[random.Next(sides.Count)];
-        SetColor();
-        MainManager.Instance.score++;
-        MainManager.Instance.scoreTextRunTime.text = MainManager.Instance.score.ToString();
-        SetCameraPosition(currentCube);
-    }
-
-    private void SetColor()
-    {
-        currentCube.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.HSVToRGB((colorRandom / 100f) % 1f, 1f, 1f));
-        colorRandom++;
+        side = sides[ColorRandomazer.random.Next(sides.Count)];
+        ColorRandomazer.SetColor();
+        ScoreManager.Instance.ScoreUp();
+        CameraManager.Instance.SetCameraPosition(currentCube);
     }
 
     private void SetCorrectPrefabName()

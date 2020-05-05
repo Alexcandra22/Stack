@@ -1250,6 +1250,7 @@ GameObject:
   - component: {fileID: 1398426324}
   - component: {fileID: 1398426323}
   - component: {fileID: 1398426325}
+  - component: {fileID: 1398426326}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1269,12 +1270,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c293ce37df8aba44c8e68dc7e9a6979c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreText: {fileID: 911141082}
-  scoreTextRunTime: {fileID: 257425045}
-  record: {fileID: 235965618}
   tapToStartText: {fileID: 184677799}
   gameOverText: {fileID: 223676554}
-  score: 0
   stack: {fileID: 1414324655}
 --- !u!4 &1398426324
 Transform:
@@ -1303,6 +1300,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCube: {fileID: 951312387}
+--- !u!114 &1398426326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1398426322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f45f7042a9050e4e98d02e3d8df9597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  record: {fileID: 235965618}
+  scoreText: {fileID: 911141082}
+  scoreTextRunTime: {fileID: 257425045}
+  score: 0
 --- !u!1 &1414324655
 GameObject:
   m_ObjectHideFlags: 0
@@ -1447,6 +1460,7 @@ GameObject:
   - component: {fileID: 1759204111}
   - component: {fileID: 1759204110}
   - component: {fileID: 1759204109}
+  - component: {fileID: 1759204112}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1519,6 +1533,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1759204112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759204108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72b9a21fe8e1db449a3bcb3afdd4c963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1819075978
 GameObject:
   m_ObjectHideFlags: 0
