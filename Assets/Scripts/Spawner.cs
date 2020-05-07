@@ -62,7 +62,6 @@ public class Spawner : MonoBehaviour
             CreateCutPlatform();
 
             currentCube.transform.position = Vector3.Lerp(currentCube.transform.position, lastCube.transform.position, 0.5f) + Vector3.up * 5f;
-            lastCube.GetComponent<BoxCollider>().enabled = false;
 
             if (currentCube.transform.localScale.x <= 0f || currentCube.transform.localScale.z <= 0f)
             {
@@ -75,7 +74,7 @@ public class Spawner : MonoBehaviour
         }
 
         lastCube = currentCube;
-        currentCube = Instantiate(currentCube);
+        currentCube = Instantiate(currentCube, MainManager.Instance.stack.transform);
         side = sides[UnityEngine.Random.Range(0, sides.Count)];
         ColorRandomazer.SetColor(currentCube);
         ScoreManager.Instance.ScoreUp();
