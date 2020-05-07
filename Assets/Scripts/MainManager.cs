@@ -11,6 +11,8 @@ public class MainManager : MonoBehaviour
     public TMP_Text tapToStartText;
     public TMP_Text gameOverText;
     bool started = true;
+    public bool movingX;
+    public bool movingZ;
 
     public GameObject stack;
 
@@ -73,43 +75,22 @@ public class MainManager : MonoBehaviour
     private void MovingNewCube()
     {
         var time = Mathf.Abs(Time.realtimeSinceStartup % 2f - 1f);
-
         var positionUp = Spawner.Instance.lastCube.transform.position + Vector3.up * 10f;
 
-        var position1 = positionUp + (Vector3.left) * 120;
-        var position2 = positionUp + (Vector3.right) * 120;
-        var position3 = positionUp + (Vector3.forward) * -120;
-        var position4 = positionUp + (Vector3.back) * -120;
+        movingX = false;
+        movingZ = false;
 
         switch (Spawner.Instance.side)
         {
-            case "x":
-                Spawner.Instance.currentCube.transform.position = Vector3.Lerp(position1, positionUp, time);
-                break;
             case "z":
-                Spawner.Instance.currentCube.transform.position = Vector3.Lerp(positionUp, position2, time);
-                Spawner.Instance.currentCube.transform.position = Vector3.Lerp(positionUp, position2, time);
+                Spawner.Instance.currentCube.transform.position = Vector3.Lerp(new Vector3(positionUp.x, positionUp.y, 120f), positionUp + (Vector3.forward) * -120, time);
+                movingZ = true;
                 break;
-            case "-x":
-                Spawner.Instance.currentCube.transform.position = Vector3.Lerp(positionUp, position3, time);
-                break;
-            case "-z":
-                Spawner.Instance.currentCube.transform.position = Vector3.Lerp(position4, positionUp, time);
+            case "x":
+                Spawner.Instance.currentCube.transform.position = Vector3.Lerp(new Vector3(-120f, positionUp.y, positionUp.z), positionUp + (Vector3.right) * 120, time);
+                movingX = true;
                 break;
         }
-    }
-
-    public void GameOver(GameObject currentCube)
-    {
-        ScoreManager.Instance.ScoreTextEnable();
-        ScoreManager.Instance.ScoreTextRunTimeDisable();
-        ScoreManager.Instance.SetScore();
-        ScoreManager.Instance.SaveRecord();
-        ScoreManager.Instance.RecordEnable();
-
-        tapToStartText.gameObject.SetActive(true);
-        gameOverText.gameObject.SetActive(true);
-        return;
     }
 
     private void RestartGame()

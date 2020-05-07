@@ -89,4 +89,17 @@ public class ScoreManager : MonoBehaviour
     {
         record.gameObject.SetActive(false);
     }
+
+    public void GameOver(GameObject currentCube)
+    {
+        ScoreTextEnable();
+        ScoreTextRunTimeDisable();
+        SetScore();
+        SaveRecord();
+        RecordEnable();
+
+        MainManager.Instance.tapToStartText.gameObject.SetActive(true);
+        MainManager.Instance.gameOverText.gameObject.SetActive(true);
+        return;
+    }
 }
