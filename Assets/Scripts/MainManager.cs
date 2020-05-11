@@ -9,10 +9,9 @@ using UnityEngine.SceneManagement;
 public class MainManager : MonoBehaviour
 {
     public TMP_Text tapToStartText;
-    public TMP_Text gameOverText;
     bool started = true;
-    public bool movingX;
-    public bool movingZ;
+    [HideInInspector] public bool movingX;
+    [HideInInspector] public bool movingZ;
 
     public GameObject stack;
 
@@ -32,14 +31,17 @@ public class MainManager : MonoBehaviour
         {
             instance = this;
         }
+    }
 
+    private void Start()
+    {
         CameraManager.Instance.SetCameraPosition(Spawner.Instance.currentCube);
-        ScoreManager.Instance.SetRecord(); 
+        //ScoreManager.Instance.SetRecord();
     }
 
     void Update()
     {
-        if (gameOverText.gameObject.activeSelf)
+        if (ScoreManager.Instance.recordGO.activeSelf)
         {
             if (Input.GetButtonDown("Fire1"))
                 RestartGame();
@@ -67,7 +69,7 @@ public class MainManager : MonoBehaviour
     private void StartGame()
     {
         tapToStartText.gameObject.SetActive(false);
-        ScoreManager.Instance.ScoreTextRunTimeEnable();
+        ScoreManager.Instance.ScoreTextEnable();
         ScoreManager.Instance.RecordDisable();
         started = false;
     }
@@ -75,7 +77,7 @@ public class MainManager : MonoBehaviour
     private void MovingNewCube()
     {
         var time = Mathf.Abs(Time.realtimeSinceStartup % 2f - 1f);
-        var positionUp = Spawner.Instance.lastCube.transform.position + Vector3.up * 10f;
+        var positionUp = Spawner.Instance.lastCube.transform.position + Vector3.up * Spawner.Instance.currentCube.transform.localScale.y;
 
         movingX = false;
         movingZ = false;

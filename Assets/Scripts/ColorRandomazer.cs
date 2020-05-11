@@ -4,14 +4,30 @@ using UnityEngine;
 
 public class ColorRandomazer : MonoBehaviour
 {
-    public static float colorRandom;
+    [HideInInspector] public float colorRandom;
 
-    void Start()
+    private static ColorRandomazer instance;
+    public static ColorRandomazer Instance { get { return instance; } }
+
+    private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+
         colorRandom = Random.Range(0f, 255f);
     }
 
-    public static void SetColor(GameObject GO)
+    void Start()
+    {
+    }
+
+    public void SetColor(GameObject GO)
     {
         GO.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.HSVToRGB((colorRandom / 100f) % 1f, 1f, 1f));
         colorRandom++;

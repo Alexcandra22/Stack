@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    public TMP_Text record;
+    public TMP_Text recordText;
+    public GameObject recordGO;
     public TMP_Text scoreText;
-    public TMP_Text scoreTextRunTime;
-    public int score;
+    //public TMP_Text scoreTextRunTime;
+    [HideInInspector] public int score;
 
     private static ScoreManager instance;
     public static ScoreManager Instance { get { return instance; } }
@@ -27,17 +28,17 @@ public class ScoreManager : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
     {
-        
+
     }
 
     public void SetScore()
     {
-        scoreText.text = "Score: " + score;
+        scoreText.text = score.ToString();
     }
 
     public void SaveRecord()
@@ -45,19 +46,22 @@ public class ScoreManager : MonoBehaviour
         if (PlayerPrefs.GetInt("Score") < score)
         {
             PlayerPrefs.SetInt("Score", score);
-            record.text = "New record: " + score + " !";
+            recordText.text = "NEW RECORD";
+            RecordDisable();
         }
+        else
+            RecordEnable();
     }
 
     public void SetRecord()
     {
-        record.text = "Record: " + PlayerPrefs.GetInt("Score", score);
+        recordText.text = PlayerPrefs.GetInt("Score", score).ToString();
     }
 
     public void ScoreUp()
     {
         score++;
-        scoreTextRunTime.text = score.ToString();
+        scoreText.text = score.ToString();
     }
 
     public void ScoreTextEnable()
@@ -70,36 +74,23 @@ public class ScoreManager : MonoBehaviour
         scoreText.gameObject.SetActive(false);
     }
 
-    public void ScoreTextRunTimeEnable()
-    {
-        scoreTextRunTime.gameObject.SetActive(true);
-    }
-
-    public void ScoreTextRunTimeDisable()
-    {
-        scoreTextRunTime.gameObject.SetActive(false);
-    }
-
     public void RecordEnable()
     {
-        record.gameObject.SetActive(true);
+        recordGO.SetActive(true);
     }
 
     public void RecordDisable()
     {
-        record.gameObject.SetActive(false);
+        recordGO.SetActive(false);
     }
 
     public void GameOver(GameObject currentCube)
     {
         ScoreTextEnable();
-        ScoreTextRunTimeDisable();
         SetScore();
+        SetRecord();
         SaveRecord();
-        RecordEnable();
-
         MainManager.Instance.tapToStartText.gameObject.SetActive(true);
-        MainManager.Instance.gameOverText.gameObject.SetActive(true);
         return;
     }
 }

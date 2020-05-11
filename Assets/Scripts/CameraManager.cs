@@ -19,19 +19,15 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     public void SetCameraPosition(GameObject current)
     {
-        Camera.main.transform.position = new Vector3(0f, Spawner.Instance.currentCube.transform.position.y, 0f) + new Vector3(200f, 150f, 200f);
+        Camera.main.transform.position = new Vector3(0f, Spawner.Instance.currentCube.transform.position.y, 0f) + new Vector3(160f, 170f, 160f);
         Camera.main.transform.LookAt(current.transform.position);
+    }
+
+    public void LookAtStack()
+    {
+        Camera.main.transform.position = new Vector3(160f, 250f, 160f);
+        Camera.main.transform.rotation = Quaternion.Euler(35f, -135f, 0f);
     }
 }

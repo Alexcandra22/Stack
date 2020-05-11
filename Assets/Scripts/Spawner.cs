@@ -42,7 +42,7 @@ public class Spawner : MonoBehaviour
         sides.Add("x");
         sides.Add("z");
 
-        ColorRandomazer.SetColor(currentCube);
+        ColorRandomazer.Instance.SetColor(currentCube);
     }
 
     private void NewCube()
@@ -66,7 +66,7 @@ public class Spawner : MonoBehaviour
             if (currentCube.transform.localScale.x <= 0f || currentCube.transform.localScale.z <= 0f)
             {
                 ScoreManager.Instance.GameOver(currentCube);
-                CameraManager.Instance.SetCameraPosition(MainManager.Instance.stack);
+                CameraManager.Instance.LookAtStack();
                 Destroy(currentCube);
                 Destroy(cutCube);
                 return;
@@ -75,10 +75,18 @@ public class Spawner : MonoBehaviour
 
         lastCube = currentCube;
         currentCube = Instantiate(currentCube, MainManager.Instance.stack.transform);
-        side = sides[UnityEngine.Random.Range(0, sides.Count)];
-        ColorRandomazer.SetColor(currentCube);
+        SetSideSpawn();
+        ColorRandomazer.Instance.SetColor(currentCube);
         ScoreManager.Instance.ScoreUp();
         CameraManager.Instance.SetCameraPosition(currentCube);
+    }
+
+    private void SetSideSpawn()
+    {
+        if (side == "x" || side == null)
+            side = sides[1];
+        else
+            side = sides[0];
     }
 
     private void CreateCutPlatform()
