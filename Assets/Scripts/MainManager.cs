@@ -33,12 +33,6 @@ public class MainManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        CameraManager.Instance.SetCameraPosition(Spawner.Instance.currentCube);
-        //ScoreManager.Instance.SetRecord();
-    }
-
     void Update()
     {
         if (ScoreManager.Instance.recordGO.activeSelf)

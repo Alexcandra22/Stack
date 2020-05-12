@@ -21,13 +21,12 @@ public class CameraManager : MonoBehaviour
 
     public void SetCameraPosition(GameObject current)
     {
-        Camera.main.transform.position = new Vector3(0f, Spawner.Instance.currentCube.transform.position.y, 0f) + new Vector3(160f, 170f, 160f);
-        Camera.main.transform.LookAt(current.transform.position);
+        Camera.main.transform.position = new Vector3(gameObject.transform.position.x, Spawner.Instance.currentCube.transform.position.y + 180f, gameObject.transform.position.z);
     }
 
     public void LookAtStack()
     {
-        Camera.main.transform.position = new Vector3(160f, 250f, 160f);
-        Camera.main.transform.rotation = Quaternion.Euler(35f, -135f, 0f);
+        Camera.main.transform.position = new Vector3(165f, 250f, 165f);
+        Camera.main.transform.rotation = Quaternion.Euler(25f, -135f, 0f);
     }
 }

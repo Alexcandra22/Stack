@@ -89,6 +89,12 @@ public class Spawner : MonoBehaviour
             side = sides[0];
     }
 
+    private void FixedUpdate()
+    {
+        if(cutCube != null)
+        cutCube.GetComponent<Rigidbody>().velocity = cutCube.GetComponent<Rigidbody>().velocity.normalized * 100f;
+    }
+
     private void CreateCutPlatform()
     {
         cutCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
