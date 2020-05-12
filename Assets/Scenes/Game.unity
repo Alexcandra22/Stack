@@ -991,8 +991,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d81dfc4740baa1c4eb861d1a721d3666, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorRandom: 0
-  skyBox: {fileID: 2100000, guid: ccf6b025d5b1e164e81215bb761c01bd, type: 2}
+  stackColorRandom: 0
+  backgroundColorRandom: 0
+  skyBoxMaterial: {fileID: 2100000, guid: ccf6b025d5b1e164e81215bb761c01bd, type: 2}
 --- !u!1 &1414324655
 GameObject:
   m_ObjectHideFlags: 0

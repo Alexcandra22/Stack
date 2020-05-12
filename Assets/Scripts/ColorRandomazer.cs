@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class ColorRandomazer : MonoBehaviour
 {
-    [HideInInspector] public float colorRandom;
-    public Material skyBox;
+    [HideInInspector] public float stackColorRandom;
+    [HideInInspector] public float backgroundColorRandom;
+
+    public Material skyBoxMaterial;
 
     private static ColorRandomazer instance;
     public static ColorRandomazer Instance { get { return instance; } }
@@ -21,23 +23,21 @@ public class ColorRandomazer : MonoBehaviour
             instance = this;
         }
 
-        colorRandom = Random.Range(0f, 255f);
-    }
-
-    private void Start()
-    {
+        stackColorRandom = Random.Range(0f, 255f);
         SetBackgroundColor();
     }
 
     public void SetColor(GameObject GO)
     {
-        GO.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.HSVToRGB((colorRandom / 100f) % 1f, 1f, 1f));
-        colorRandom++;
+        GO.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.HSVToRGB((stackColorRandom / 100f) % 1f, 1f, 1f));
+        stackColorRandom++;
     }
 
     public void SetBackgroundColor()
     {
-        Debug.Log(" Color 1 " + skyBox.GetColor("Color 1"));
-        Debug.Log(" Color 2 " + skyBox.GetColor("Color 2"));
+        backgroundColorRandom = Random.Range(0f, 255f);
+        skyBoxMaterial.SetColor("_Color1", Color.HSVToRGB((backgroundColorRandom / 100f) % 1f, 1f, 1f));
+        backgroundColorRandom = Random.Range(0f, 255f);
+        skyBoxMaterial.SetColor("_Color2", Color.HSVToRGB((backgroundColorRandom / 100f) % 1f, 1f, 1f));
     }
 }
