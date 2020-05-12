@@ -58,9 +58,8 @@ public class Spawner : MonoBehaviour
             currentCube.transform.localScale = new Vector3(lastCube.transform.localScale.x - Mathf.Abs(currentCube.transform.position.x - lastCube.transform.position.x), 
                                                            lastCube.transform.localScale.y, 
                                                            lastCube.transform.localScale.z - Mathf.Abs(currentCube.transform.position.z - lastCube.transform.position.z));
-
+            AudioManager.Instance.StopStackOn();
             CreateCutPlatform();
-
             currentCube.transform.position = Vector3.Lerp(currentCube.transform.position, lastCube.transform.position, 0.5f) + Vector3.up * 5f;
 
             if (currentCube.transform.localScale.x <= 0f || currentCube.transform.localScale.z <= 0f)
