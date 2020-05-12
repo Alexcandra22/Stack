@@ -5,6 +5,7 @@ using UnityEngine;
 public class ColorRandomazer : MonoBehaviour
 {
     [HideInInspector] public float colorRandom;
+    public Material skyBox;
 
     private static ColorRandomazer instance;
     public static ColorRandomazer Instance { get { return instance; } }
@@ -23,13 +24,20 @@ public class ColorRandomazer : MonoBehaviour
         colorRandom = Random.Range(0f, 255f);
     }
 
-    void Start()
+    private void Start()
     {
+        SetBackgroundColor();
     }
 
     public void SetColor(GameObject GO)
     {
         GO.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.HSVToRGB((colorRandom / 100f) % 1f, 1f, 1f));
         colorRandom++;
+    }
+
+    public void SetBackgroundColor()
+    {
+        Debug.Log(" Color 1 " + skyBox.GetColor("Color 1"));
+        Debug.Log(" Color 2 " + skyBox.GetColor("Color 2"));
     }
 }
