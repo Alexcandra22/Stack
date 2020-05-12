@@ -26,7 +26,7 @@ public class CameraManager : MonoBehaviour
 
     public void LookAtStack()
     {
-        Camera.main.transform.position = new Vector3(165f, 250f, 165f);
+        Camera.main.transform.position = new Vector3(165f, 180f, 165f);
         Camera.main.transform.rotation = Quaternion.Euler(25f, -135f, 0f);
     }
 }
