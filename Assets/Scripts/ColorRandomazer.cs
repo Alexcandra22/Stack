@@ -5,9 +5,11 @@ using UnityEngine;
 public class ColorRandomazer : MonoBehaviour
 {
     [HideInInspector] public float stackColorRandom;
-    [HideInInspector] public float backgroundColorRandom;
+    [HideInInspector] public float backgroundColorRandomUp;
+    [HideInInspector] public float backgroundColorRandomDown;
 
     public Material skyBoxMaterial;
+    public Material bottomPlatformMaterial;
 
     private static ColorRandomazer instance;
     public static ColorRandomazer Instance { get { return instance; } }
@@ -25,6 +27,7 @@ public class ColorRandomazer : MonoBehaviour
 
         stackColorRandom = Random.Range(0f, 255f);
         SetBackgroundColor();
+        SetBottomplatformColor();
     }
 
     public void SetColor(GameObject GO)
@@ -35,9 +38,17 @@ public class ColorRandomazer : MonoBehaviour
 
     public void SetBackgroundColor()
     {
-        backgroundColorRandom = Random.Range(0f, 255f);
-        skyBoxMaterial.SetColor("_Color1", Color.HSVToRGB((backgroundColorRandom / 100f) % 1f, 1f, 1f));
-        backgroundColorRandom = Random.Range(0f, 255f);
-        skyBoxMaterial.SetColor("_Color2", Color.HSVToRGB((backgroundColorRandom / 100f) % 1f, 1f, 1f));
+        backgroundColorRandomUp = Random.Range(0f, 255f);
+        skyBoxMaterial.SetColor("_Color1", Color.HSVToRGB((backgroundColorRandomUp / 100f) % 1f, 1f, 1f));
+
+        backgroundColorRandomDown = Random.Range(0f, 255f);
+        skyBoxMaterial.SetColor("_Color2", Color.HSVToRGB((backgroundColorRandomDown / 100f) % 1f, 1f, 1f));
+    }
+
+    public void SetBottomplatformColor()
+    {
+        bottomPlatformMaterial.SetColor("_ColorTop", Color.HSVToRGB((stackColorRandom / 100f) % 1f, 1f, 1f));
+        bottomPlatformMaterial.SetColor("_ColorMid", Color.HSVToRGB((stackColorRandom / 100f) % 1f, 1f, 1f));
+        bottomPlatformMaterial.SetColor("_ColorBot", Color.HSVToRGB((backgroundColorRandomUp / 100f) % 1f, 1f, 1f));
     }
 }
