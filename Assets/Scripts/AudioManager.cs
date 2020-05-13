@@ -5,6 +5,7 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] private AudioSource stopStackSource;
+    [SerializeField] private AudioSource startGameSource;
 
     private static AudioManager instance;
     public static AudioManager Instance { get { return instance; } }
