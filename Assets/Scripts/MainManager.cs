@@ -11,17 +11,16 @@ public class MainManager : MonoBehaviour
     [HideInInspector] public bool movingX;
     [HideInInspector] public bool movingZ;
     [HideInInspector] public bool gameOver = false;
+    [HideInInspector] public int i = 0;
 
     public TMP_Text tapToStartText;
     public TMP_Text stackText;
-
     public GameObject stack;
     public PhysicMaterial cuCubeMaterial;
-
-    bool started = true;
-
     public delegate void NewPlatformDelegate();
     public event NewPlatformDelegate NewPlatformEvent;
+
+    private bool started = true;
 
     private static MainManager instance;
     public static MainManager Instance { get { return instance; } }
@@ -94,21 +93,44 @@ public class MainManager : MonoBehaviour
         if (lastCube != null && currentCube != null)
         {
             Spawner.Instance.previousScale = currentCube.transform.localScale;
-            Spawner.Instance.previousPosition = currentCube.transform.position;
 
             currentCube.transform.position = new Vector3(Mathf.Round(currentCube.transform.position.x), currentCube.transform.position.y, Mathf.Round(currentCube.transform.position.z));
             currentCube.transform.localScale = new Vector3(lastCube.transform.localScale.x - Mathf.Abs(currentCube.transform.position.x - lastCube.transform.position.x),
-                                                           lastCube.transform.localScale.y,
-                                                           lastCube.transform.localScale.z - Mathf.Abs(currentCube.transform.position.z - lastCube.transform.position.z));
-            AudioManager.Instance.StopStackOn();
-            Spawner.Instance.CreateCutPlatform();
-            currentCube.transform.position = Vector3.Lerp(currentCube.transform.position, lastCube.transform.position, 0.5f) + Vector3.up * 5f;
+                                   lastCube.transform.localScale.y,
+                                   lastCube.transform.localScale.z - Mathf.Abs(currentCube.transform.position.z - lastCube.transform.position.z));
 
-            CheckCurrentCubeLocation(Spawner.Instance.currentCube);
+            CheckCurrentCubePosition(currentCube, lastCube);
+            currentCube.transform.position = Vector3.Lerp(currentCube.transform.position, lastCube.transform.position, 0.5f) + Vector3.up * 10f;
         }
     }
 
-    private void CheckCurrentCubeLocation(GameObject currentCube)
+    private void CheckCurrentCubePosition(GameObject currentCube, GameObject lastCube)
+    {
+        if (CurrenСubeOutsidePreviousCube(currentCube))
+            if (SmoothHitOnPreviousCube(currentCube, lastCube))
+            {
+                AudioManager.Instance.StopStackOn();
+                Spawner.Instance.CreateCutPlatform();
+                i = 0;
+            }
+    }
+
+    private bool SmoothHitOnPreviousCube(GameObject currentCube, GameObject lastCube)
+    {
+        double differenceXPosition = Math.Abs(Math.Abs(lastCube.transform.localScale.x) - Math.Abs(currentCube.transform.localScale.x));
+        double differenceZPosition = Math.Abs(Math.Abs(lastCube.transform.localScale.z) - Math.Abs(currentCube.transform.localScale.z));
+
+        if ((movingX && differenceXPosition <= 2) || (movingZ && differenceZPosition <= 2))
+        {
+            currentCube.transform.localScale = lastCube.transform.localScale;
+            AudioManager.Instance.StactOnStackOn(i);
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool CurrenСubeOutsidePreviousCube(GameObject currentCube)
     {
         if (currentCube.transform.localScale.x <= 0f || currentCube.transform.localScale.z <= 0f)
         {
@@ -117,7 +139,12 @@ public class MainManager : MonoBehaviour
             Destroy(currentCube);
             Destroy(Spawner.Instance.cutCube);
             gameOver = true;
+            //AudioManager.Instance.StopStackOn();
+            //Spawner.Instance.CreateCutPlatform();
+            return false;
         }
+
+        return true;
     }
 
     private void RestartGame()

@@ -2,17 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Spawner : MonoBehaviour
 {
     [NonSerialized] public GameObject lastCube;
     [NonSerialized] public GameObject cutCube;
     [NonSerialized] public Vector3 previousScale;
-    [NonSerialized] public Vector3 previousPosition;
     [NonSerialized] public string side;
     [NonSerialized] public bool movingCube = false;
     [NonSerialized] private bool posA;
-    [NonSerialized] private bool posB;
 
     public GameObject currentCube;
     public float speed = 100f;
@@ -75,10 +74,10 @@ public class Spawner : MonoBehaviour
         {
             case "x":
                 if (currentCube.transform.position.x == 120f)
-                    SetPosAFalse();
+                    posA = false;
 
                 if (currentCube.transform.position.x == -120f)
-                    SetPosATrue();
+                    posA = true;
 
                 if (posA)
                 {
@@ -96,10 +95,10 @@ public class Spawner : MonoBehaviour
 
             case "z":
                 if (currentCube.transform.position.z == 120f)
-                    SetPosAFalse();
+                    posA = false;
 
                 if (currentCube.transform.position.z == -120f)
-                    SetPosATrue();
+                    posA = true;
 
                 if (posA)
                 {
@@ -129,18 +128,6 @@ public class Spawner : MonoBehaviour
         //}
     }
 
-    private void SetPosATrue()
-    {
-        posB = false;
-        posA = true;
-    }
-
-    private void SetPosAFalse()
-    {
-        posB = true;
-        posA = false;
-    }
-
     private void CreateNewCube()
     {
         lastCube = currentCube;
@@ -156,12 +143,10 @@ public class Spawner : MonoBehaviour
             case "x":
                 currentCube.transform.position = new Vector3(currentCube.transform.position.x - 120f, currentCube.transform.position.y + currentCube.transform.localScale.y, currentCube.transform.position.z);
                 posA = true;
-                posB = false;
                 break;
             case "z":
                 currentCube.transform.position = new Vector3(currentCube.transform.position.x, currentCube.transform.position.y + currentCube.transform.localScale.y, currentCube.transform.position.z - 120f);
                 posA = true;
-                posB = false;
                 break;
         }
     }
@@ -169,13 +154,13 @@ public class Spawner : MonoBehaviour
     public void CreateCutPlatform()
     {
         cutCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        CheckCutCubePosition();
-        CheckCutCubeScale();
         cutCube.GetComponent<MeshRenderer>().material.color = currentCube.GetComponent<MeshRenderer>().material.color;
         cutCube.AddComponent<Rigidbody>();
         cutCube.GetComponent<BoxCollider>().material = MainManager.Instance.cuCubeMaterial;
         var cutCubeRigibody = cutCube.GetComponent<Rigidbody>();
         cutCubeRigibody.constraints = RigidbodyConstraints.FreezeRotationY;
+        CheckCutCubeScale();
+        CheckCutCubePosition();
         Destroy(cutCube.gameObject, 10f);
     }
 
@@ -204,8 +189,13 @@ public class Spawner : MonoBehaviour
                 cutCube.transform.position = new Vector3(currentCube.transform.position.x,
                                                          currentCube.transform.position.y,
                                                         (currentCube.transform.position.z > 0) 
-                                                        ?currentCube.transform.position.z + (currentCube.transform.localScale.z / 2)
-                                                        :currentCube.transform.position.z - (currentCube.transform.localScale.z / 2));
+                                                        ? (currentCube.transform.position.z + (currentCube.transform.localScale.z / 2))
+                                                        : (currentCube.transform.position.z - (currentCube.transform.localScale.z / 2)));
+
+            //if (currentCube.transform.position.z > 0)
+            //    cutCube.transform.position = new Vector3(currentCube.transform.position.x, currentCube.transform.position.y, currentCube.transform.position.z - 50f);
+            //else
+            //    cutCube.transform.position = new Vector3(currentCube.transform.position.x, currentCube.transform.position.y, currentCube.transform.position.z + 50f);
         }
         else
         {
@@ -213,10 +203,15 @@ public class Spawner : MonoBehaviour
 
             if (Mathf.Abs(delta) > margin)
                 cutCube.transform.position = new Vector3((currentCube.transform.position.x > 0)
-                                                         ?currentCube.transform.position.x + (currentCube.transform.localScale.x / 2)
-                                                         :currentCube.transform.position.x - (currentCube.transform.localScale.x / 2),
+                                                         ? (currentCube.transform.position.x + (currentCube.transform.localScale.x / 2))
+                                                         : (currentCube.transform.position.x - (currentCube.transform.localScale.x / 2)),
                                                           currentCube.transform.position.y,
                                                           currentCube.transform.position.z);
+
+            //if (currentCube.transform.position.x > 0)
+            //    cutCube.transform.position = new Vector3(currentCube.transform.position.x - 50f, currentCube.transform.position.y, currentCube.transform.position.z);
+            //else
+            //    cutCube.transform.position = new Vector3(currentCube.transform.position.x + 50f, currentCube.transform.position.y, currentCube.transform.position.z);
         }
     }
 }
