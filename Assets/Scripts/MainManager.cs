@@ -91,7 +91,7 @@ public class MainManager : MonoBehaviour
 
     private void PositioningCurrentCube(GameObject currentCube, GameObject lastCube)
     {
-        if (lastCube != null)
+        if (lastCube != null && currentCube != null)
         {
             Spawner.Instance.previousScale = currentCube.transform.localScale;
             Spawner.Instance.previousPosition = currentCube.transform.position;
