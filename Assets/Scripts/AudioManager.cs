@@ -26,4 +26,9 @@ public class AudioManager : MonoBehaviour
     {
         stopStackSource.Play();
     }
+
+    public void StartGameOff()
+    {
+        startGameSource.Stop();
+    }
 }

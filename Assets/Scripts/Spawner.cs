@@ -5,15 +5,17 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    [NonSerialized] public GameObject lastCube;
+    [NonSerialized] public GameObject cutCube;
+    [NonSerialized] public Vector3 previousScale;
+    [NonSerialized] public Vector3 previousPosition;
+    [NonSerialized] public string side;
+    [NonSerialized] public bool movingCube = false;
+
     public GameObject currentCube;
-    [NonSerialized]
-    public GameObject lastCube;
-    [NonSerialized]
-    public string side;
+
     private List<string> sides = new List<string>();
-    Vector3 previousScale;
-    Vector3 previousPosition;
-    GameObject cutCube;
+
     float intScaleX;
     float intScaleZ;
     float intPositionX;
@@ -37,47 +39,16 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        MainManager.Instance.NewPlatformEvent += NewCube;
+        MainManager.Instance.NewPlatformEvent += CreateNewCube;
 
         sides.Add("x");
         sides.Add("z");
-
-        ColorRandomazer.Instance.SetColor(currentCube);
     }
 
-    private void NewCube()
+    private void FixedUpdate()
     {
-        SetCorrectPrefabName();
-
-        if (lastCube != null)
-        {
-            previousScale = currentCube.transform.localScale;
-            previousPosition = currentCube.transform.position;
-
-            currentCube.transform.position = new Vector3(Mathf.Round(currentCube.transform.position.x), currentCube.transform.position.y, Mathf.Round(currentCube.transform.position.z));
-            currentCube.transform.localScale = new Vector3(lastCube.transform.localScale.x - Mathf.Abs(currentCube.transform.position.x - lastCube.transform.position.x), 
-                                                           lastCube.transform.localScale.y, 
-                                                           lastCube.transform.localScale.z - Mathf.Abs(currentCube.transform.position.z - lastCube.transform.position.z));
-            AudioManager.Instance.StopStackOn();
-            CreateCutPlatform();
-            currentCube.transform.position = Vector3.Lerp(currentCube.transform.position, lastCube.transform.position, 0.5f) + Vector3.up * 5f;
-
-            if (currentCube.transform.localScale.x <= 0f || currentCube.transform.localScale.z <= 0f)
-            {
-                ScoreManager.Instance.GameOver(currentCube);
-                CameraManager.Instance.LookAtStack();
-                Destroy(currentCube);
-                Destroy(cutCube);
-                return;
-            }
-        }
-
-        lastCube = currentCube;
-        currentCube = Instantiate(currentCube, MainManager.Instance.stack.transform);
-        SetSideSpawn();
-        ColorRandomazer.Instance.SetColor(currentCube);
-        ScoreManager.Instance.ScoreUp();
-        CameraManager.Instance.SetCameraPosition(currentCube);
+        if (cutCube != null)
+            cutCube.GetComponent<Rigidbody>().velocity = cutCube.GetComponent<Rigidbody>().velocity.normalized * 100f;
     }
 
     private void SetSideSpawn()
@@ -88,20 +59,49 @@ public class Spawner : MonoBehaviour
             side = sides[0];
     }
 
-    private void FixedUpdate()
+    public void MovingNewCube()
     {
-        if(cutCube != null)
-        cutCube.GetComponent<Rigidbody>().velocity = cutCube.GetComponent<Rigidbody>().velocity.normalized * 100f;
+        var time = Mathf.Abs(Time.realtimeSinceStartup % 2f - 1f);
+        var positionUp = Spawner.Instance.lastCube.transform.position + Vector3.up * Spawner.Instance.currentCube.transform.localScale.y;
+
+        MainManager.Instance.movingX = false;
+        MainManager.Instance.movingZ = false;
+
+        switch (Spawner.Instance.side)
+        {
+            case "z":
+                currentCube.transform.position = Vector3.Lerp(new Vector3(positionUp.x, positionUp.y, 120f), positionUp + (Vector3.forward) * -120, time);
+                MainManager.Instance.movingZ = true;
+                break;
+            case "x":
+                currentCube.transform.position = Vector3.Lerp(new Vector3(-120f, positionUp.y, positionUp.z), positionUp + (Vector3.right) * 120, time);
+                MainManager.Instance.movingX = true;
+                break;
+        }
     }
 
-    private void CreateCutPlatform()
+    private void CreateNewCube()
+    {
+        lastCube = currentCube;
+        currentCube = Instantiate(currentCube, MainManager.Instance.stack.transform);
+        SetSideSpawn();
+        ColorRandomazer.Instance.SetColor(currentCube);
+        ScoreManager.Instance.ScoreUp();
+        CameraManager.Instance.SetCameraPosition(currentCube);
+        movingCube = true;
+    }
+
+    public void CreateCutPlatform()
     {
         cutCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cutCube.GetComponent<MeshRenderer>().material.color = currentCube.GetComponent<MeshRenderer>().material.color;
-        cutCube.AddComponent<Rigidbody>();
         CheckCutCubePosition();
         CheckCutCubeScale();
-        Destroy(cutCube.gameObject, 5f);
+        cutCube.GetComponent<MeshRenderer>().material.color = currentCube.GetComponent<MeshRenderer>().material.color;
+        cutCube.AddComponent<Rigidbody>();
+        cutCube.GetComponent<BoxCollider>().material = MainManager.Instance.cuCubeMaterial;
+        var cutCubeRigibody = cutCube.GetComponent<Rigidbody>();
+        cutCubeRigibody.constraints = RigidbodyConstraints.FreezeRotationY;
+        Destroy(cutCube.gameObject, 10f);
     }
 
     private void CheckCutCubeScale()
@@ -143,10 +143,5 @@ public class Spawner : MonoBehaviour
                                                           currentCube.transform.position.y,
                                                           currentCube.transform.position.z);
         }
-    }
-
-    private void SetCorrectPrefabName()
-    {
-        currentCube.name = currentCube.name.Replace("(Clone)", "");
     }
 }

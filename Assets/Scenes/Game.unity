@@ -5864,10 +5864,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bca32d79a51e44e4ea2b735ecc3abddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recordText: {fileID: 235965618}
-  recordGO: {fileID: 1550773950}
-  scoreText: {fileID: 911141082}
   score: 0
+  recordText: {fileID: 235965618}
+  scoreText: {fileID: 911141082}
+  recordGO: {fileID: 1550773950}
 --- !u!114 &1398426326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5880,10 +5880,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1de1e818412c0bc4cbb79576c7960c4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tapToStartText: {fileID: 184677799}
   movingX: 0
   movingZ: 0
+  gameOver: 0
+  tapToStartText: {fileID: 184677799}
+  stackText: {fileID: 949840422}
   stack: {fileID: 1414324655}
+  cuCubeMaterial: {fileID: 13400000, guid: 6493bf77193d1b74c86c6053dd2685aa, type: 2}
 --- !u!114 &1398426327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6292,7 +6295,7 @@ GameObject:
   - component: {fileID: 1613087185}
   - component: {fileID: 1613087184}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: BottomPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

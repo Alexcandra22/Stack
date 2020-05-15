@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    public TMP_Text recordText;
-    public GameObject recordGO;
-    public TMP_Text scoreText;
-    //public TMP_Text scoreTextRunTime;
     [HideInInspector] public int score;
+
+    public TMP_Text recordText;
+    public TMP_Text scoreText;
+
+    public GameObject recordGO;
 
     private static ScoreManager instance;
     public static ScoreManager Instance { get { return instance; } }
@@ -24,16 +25,6 @@ public class ScoreManager : MonoBehaviour
         {
             instance = this;
         }
-    }
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
     }
 
     public void SetScore()
@@ -82,15 +73,5 @@ public class ScoreManager : MonoBehaviour
     public void RecordDisable()
     {
         recordGO.SetActive(false);
-    }
-
-    public void GameOver(GameObject currentCube)
-    {
-        ScoreTextEnable();
-        SetScore();
-        SetRecord();
-        SaveRecord();
-        MainManager.Instance.tapToStartText.gameObject.SetActive(true);
-        return;
     }
 }
