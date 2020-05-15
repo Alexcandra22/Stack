@@ -11,9 +11,13 @@ public class Spawner : MonoBehaviour
     [NonSerialized] public Vector3 previousPosition;
     [NonSerialized] public string side;
     [NonSerialized] public bool movingCube = false;
+    [NonSerialized] private bool posA;
+    [NonSerialized] private bool posB;
 
     public GameObject currentCube;
+    public float speed = 100f;
 
+    Vector3 target;
     private List<string> sides = new List<string>();
 
     float intScaleX;
@@ -61,23 +65,80 @@ public class Spawner : MonoBehaviour
 
     public void MovingNewCube()
     {
-        var time = Mathf.Abs(Time.realtimeSinceStartup % 2f - 1f);
-        var positionUp = Spawner.Instance.lastCube.transform.position + Vector3.up * Spawner.Instance.currentCube.transform.localScale.y;
+        var time = Mathf.Abs(Time.realtimeSinceStartup  % 2f - 1f);
+        var positionUp = lastCube.transform.position + Vector3.up * currentCube.transform.localScale.y;
 
         MainManager.Instance.movingX = false;
         MainManager.Instance.movingZ = false;
 
-        switch (Spawner.Instance.side)
+        switch (side)
         {
-            case "z":
-                currentCube.transform.position = Vector3.Lerp(new Vector3(positionUp.x, positionUp.y, 120f), positionUp + (Vector3.forward) * -120, time);
-                MainManager.Instance.movingZ = true;
-                break;
             case "x":
-                currentCube.transform.position = Vector3.Lerp(new Vector3(-120f, positionUp.y, positionUp.z), positionUp + (Vector3.right) * 120, time);
+                if (currentCube.transform.position.x == 120f)
+                    SetPosAFalse();
+
+                if (currentCube.transform.position.x == -120f)
+                    SetPosATrue();
+
+                if (posA)
+                {
+                    target = new Vector3(120f, currentCube.transform.position.y, currentCube.transform.position.z);
+                    currentCube.transform.position = Vector3.MoveTowards(currentCube.transform.position, target, Time.deltaTime * speed);
+                }
+                else
+                {
+                    target = new Vector3(-120f, currentCube.transform.position.y, currentCube.transform.position.z);
+                    currentCube.transform.position = Vector3.MoveTowards(currentCube.transform.position, target, Time.deltaTime * speed);
+                }
+
                 MainManager.Instance.movingX = true;
                 break;
+
+            case "z":
+                if (currentCube.transform.position.z == 120f)
+                    SetPosAFalse();
+
+                if (currentCube.transform.position.z == -120f)
+                    SetPosATrue();
+
+                if (posA)
+                {
+                    target = new Vector3(currentCube.transform.position.x, currentCube.transform.position.y, 120f);
+                    currentCube.transform.position = Vector3.MoveTowards(currentCube.transform.position, target, Time.deltaTime * speed);
+                }
+                else
+                {
+                    target = new Vector3(currentCube.transform.position.x, currentCube.transform.position.y, -120f);
+                    currentCube.transform.position = Vector3.MoveTowards(currentCube.transform.position, target, Time.deltaTime * speed);
+                }
+
+                MainManager.Instance.movingZ = true;
+                break;
         }
+
+        //switch (side)
+        //{
+        //    case "z":
+        //        currentCube.transform.position = Vector3.Lerp(new Vector3(positionUp.x, positionUp.y, 120f), positionUp + (Vector3.forward) * -120, Mathf.PingPong(Time.time * 1f, 0.5f));
+        //        MainManager.Instance.movingZ = true;
+        //        break;
+        //    case "x":
+        //        currentCube.transform.position = Vector3.Lerp(new Vector3(-120f, positionUp.y, positionUp.z), positionUp + (Vector3.right) * 120, time);
+        //        MainManager.Instance.movingX = true;
+        //        break;
+        //}
+    }
+
+    private void SetPosATrue()
+    {
+        posB = false;
+        posA = true;
+    }
+
+    private void SetPosAFalse()
+    {
+        posB = true;
+        posA = false;
     }
 
     private void CreateNewCube()
@@ -89,6 +150,20 @@ public class Spawner : MonoBehaviour
         ScoreManager.Instance.ScoreUp();
         CameraManager.Instance.SetCameraPosition(currentCube);
         movingCube = true;
+
+        switch (side)
+        {
+            case "x":
+                currentCube.transform.position = new Vector3(currentCube.transform.position.x - 120f, currentCube.transform.position.y + currentCube.transform.localScale.y, currentCube.transform.position.z);
+                posA = true;
+                posB = false;
+                break;
+            case "z":
+                currentCube.transform.position = new Vector3(currentCube.transform.position.x, currentCube.transform.position.y + currentCube.transform.localScale.y, currentCube.transform.position.z - 120f);
+                posA = true;
+                posB = false;
+                break;
+        }
     }
 
     public void CreateCutPlatform()
