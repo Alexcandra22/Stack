@@ -47,8 +47,7 @@ public class ColorRandomazer : MonoBehaviour
 
     public void SetBottomplatformColor()
     {
-        bottomPlatformMaterial.SetColor("_ColorTop", Color.HSVToRGB((stackColorRandom / 100f) % 1f, 1f, 1f));
-        bottomPlatformMaterial.SetColor("_ColorMid", Color.HSVToRGB((stackColorRandom / 100f) % 1f, 1f, 1f));
-        bottomPlatformMaterial.SetColor("_ColorBot", Color.HSVToRGB((backgroundColorRandomUp / 100f) % 1f, 1f, 1f));
+        bottomPlatformMaterial.SetColor("_ColorMid", Color.HSVToRGB((stackColorRandom / 100f) % 1f, 1f, 0.7f));
+        bottomPlatformMaterial.SetColor("_ColorBot", Color.HSVToRGB((backgroundColorRandomUp / 100f) % 1f, 0.7f, 1f));
     }
 }

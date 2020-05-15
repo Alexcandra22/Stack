@@ -1,7 +1,6 @@
 ﻿Shader "Custom/Gradient_3Color" {
 	Properties{
 		[PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
-		_ColorTop("Top Color", Color) = (1,1,1,1)
 		_ColorMid("Mid Color", Color) = (1,1,1,1)
 		_ColorBot("Bot Color", Color) = (1,1,1,1)
 		_Middle("Middle", Range(0.001, 20)) = 20
@@ -19,7 +18,6 @@
 			#pragma fragment frag
 			#include "UnityCG.cginc"
 
-			fixed4 _ColorTop;
 			fixed4 _ColorMid;
 			fixed4 _ColorBot;
 			float  _Middle;
@@ -38,7 +36,7 @@
 
 			fixed4 frag(v2f i) : COLOR {
 				fixed4 c = lerp(_ColorBot, _ColorMid, i.texcoord.y / _Middle) * step(i.texcoord.y, _Middle);
-				c += lerp(_ColorMid, _ColorTop, (i.texcoord.y - _Middle) / (1 - _Middle)) * step(_Middle, i.texcoord.y);
+				c += lerp(_ColorMid, _ColorMid, (i.texcoord.y - _Middle) / (1 - _Middle)) * step(_Middle, i.texcoord.y);
 				c.a = 1;
 				return c;
 			}
